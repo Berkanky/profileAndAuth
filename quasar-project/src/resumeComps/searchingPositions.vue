@@ -2,7 +2,8 @@
   <q-card
     style="margin:0 auto;"
     :style="{
-      'width':this.store.mobileActive ? '100%' : '600px'
+      'width':this.store.mobileActive ? '100%' : '600px',
+      'height':this.$q.screen.height + 'px'
     }"
   >
     <q-card-section class="row">
@@ -14,17 +15,20 @@
           :class="this.newCardClass(data)"
           v-on:mouseover="mouseOver(data)"
           v-on:mouseleave="mouseLeave(data)"
-          style="border-radius:15px;"
-          v-for="(data,key) in this.searchingPositions" :key="key" class="col-3 q-ma-xs">
-          <q-card-section class="text-center text-capitalize">
-           <div>
-            {{ data.positionName ?? '' }}
-           </div>
-           <q-space></q-space>
-           <div v-if="this.checkForDeleteList(data)">
-            <q-icon name="check" flat color="red-4" size="xs"></q-icon>
-           </div>
-          </q-card-section>
+          style="border-radius:7px;"
+          v-for="(data,key) in this.searchingPositions" :key="key" class="col-4 q-mt-xs">
+            <q-item>
+              <q-item-section class="text-left text-capitalize">
+                <div>
+                  {{ (data.positionName).slice(0,10) + '...' ?? '' }}
+                </div>
+                </q-item-section>
+                <q-item-section class="text-right">
+                  <div v-if="this.checkForDeleteList(data)">
+                    <q-icon name="check" flat color="red-4" size="xs"></q-icon>
+                </div>
+                </q-item-section>
+            </q-item>
         </q-card>
       </transition-group>
     </q-card-section>
@@ -32,30 +36,30 @@
       @dragover.prevent
       @dragleave.prevent
       @drop="onDrop(e)"
-      class="text-center bg-red-1" style="border-radius:15px;">
+      class="text-center bg-red-4" style="border-radius:0px;">
       <q-card
         flat
-        style="border-radius:15px;"
-        class="bg-transparent q-mt-xs"
+        style="border-radius:4px;"
+        class="bg-grey-2 q-mt-xs"
         v-for="(data,key) in this.deleteList" :key="key">
-          <q-card-section horizontal>
-            <q-card-section class="col text-left text-capitalize text-grey-8 text-weight-bold">
+          <q-item>
+            <q-item-section class="col text-left text-capitalize text-grey-8 text-weight-bold">
               <div>
                 <q-icon name="info"></q-icon>
                 {{ data.positionName }}
               </div>
-          </q-card-section>
-          <q-card-section class="col-2">
-            <q-btn icon="remove" flat color="dark" v-on:click="removeFromDeleteList(data)"></q-btn>
-          </q-card-section>
-          </q-card-section>
+          </q-item-section>
+          <q-item-section class="col-2">
+            <q-btn icon="delete_forever" flat color="red-4" v-on:click="removeFromDeleteList(data)"></q-btn>
+          </q-item-section>
+          </q-item>
       </q-card>
       <q-btn
         :disable="this.deleteList.length ? false : true"
-        icon="delete_forever" flat color="red-4" no-caps label="Scroll For Remove" class="q-mt-md" v-on:click="deleteSelecteds"></q-btn>
+        icon="delete_forever" flat color="white" no-caps label="Scroll For Remove" class="q-mt-md" v-on:click="deleteSelecteds"></q-btn>
     </q-card-section>
-    <q-card-section>
       <q-input
+        class="q-mt-md"
         v-on:keyup.enter="this.addPosition()"
         color="grey-8"
         filled v-model="this.positionData.positionName" label="Add Position"
@@ -65,13 +69,10 @@
         </template>
         <template v-slot:append>
           <q-btn icon="remove" flat color="red-4" v-if="this.positionData.positionName" v-on:click="delete this.positionData.positionName"></q-btn>
-        </template>
-        <template v-slot:after>
-          <q-btn icon="add" color="green-4" v-if="this.positionData.positionName" v-on:click="addPosition"></q-btn>
+          <q-btn icon="send" flat color="green-4" v-if="this.positionData.positionName" v-on:click="addPosition"></q-btn>
         </template>
       </q-input>
-    </q-card-section>
-    <q-card-section horizontal class="q-pa-md">
+    <q-card-section horizontal class="q-pa-md absolute-bottom">
         <q-btn
           v-on:click="this.store.currentStep = this.store.currentStep - 1"
           class="col" flat color="grey-8" label="Back" no-caps

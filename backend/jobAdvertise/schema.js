@@ -31,6 +31,40 @@ const jobAdvertiseSchema = new mongoose.Schema({
     mentionAboutMe:{
         type:String,
         required:false
+    },
+    jobAdvertisePostEndDate:{
+        type:String,
+        required:false
+    },
+    declinedStatus:{
+        type:Boolean,
+        required:false,
+        default:false
+    },
+    confirmedStatus:{
+        type:Boolean,
+        required:false,
+        default:false
+    },
+    hideLocationDetails:{
+        type:Boolean,
+        required:false,
+        default:false
+    },
+    hideAdvertiseStatus:{
+        type:Boolean,
+        required:false,
+        default:false
+    },
+    lookingForJob:{
+        type:Boolean,
+        required:false,
+        default:true
+    },
+    hideGalleryActive:{
+        type:Boolean,
+        required:false,
+        default:true
     }
 })
 

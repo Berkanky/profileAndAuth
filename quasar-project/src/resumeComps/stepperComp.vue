@@ -1,29 +1,42 @@
 <template>
-    <div
-      class="col-2"
+  <q-page-sticky position="left" class="col-2">
+    <q-list
+      :style="{
+        'height':this.$q.screen.height + 'px'
+      }"
       v-if="!this.store.mobileActive"
-    >
-    <q-stepper
-      v-model="this.store.currentStep"
-      ref="stepper"
-      color="green-4"
-      animated
-      vertical
-      flat
-      header-nav
-      style="width:100%;"
-    >
-      <q-step
-        :color="data.stepVal === this.store.currentStep ? 'teal-5' : 'grey-5'"
+      bordered padding class="bg-grey-2 ">
+      <q-item
         v-for="(data,key) in this.options" :key="key"
-        :name="data.id"
-        :title="data.label"
-        :icon="data.icon"
-        :done="data.stepVal < this.store.currentStep"
+        clickable
+        v-ripple
+        class=""
+        :active="this.store.currentStep === data.stepVal ? true : false"
+        @click="this.store.currentStep = data.stepVal"
+        active-class="bg-grey-8 text-white"
+        style=""
       >
-      </q-step>
-    </q-stepper>
-    </div>
+      <q-item-section avatar>
+<!--           <q-icon
+            :color="this.store.currentStep === data.stepVal ? 'white' : 'grey-8'"
+            :name="data.icon" /> -->
+            <q-btn flat :label="data.stepVal" :color="this.store.currentStep === data.stepVal ? 'white' : 'grey-8'"></q-btn>
+        </q-item-section>
+
+        <q-item-section :class="this.store.currentStep === data.stepVal ? 'text-white' : 'text-grey-8'">
+
+          <div>
+            {{ data.label }}
+          </div>
+
+        </q-item-section><!--
+        <q-item-section class="">
+          <q-icon :name="this.checkNeedsForWorkAdvertise(data)" color="red"></q-icon>
+        </q-item-section> -->
+      </q-item>
+    </q-list>
+  </q-page-sticky>
+
 </template>
 
 <script>
@@ -52,6 +65,17 @@ export default {
     }
   },
   methods:{
+    checkNeedsForWorkAdvertise(data){
+      let requierementsList = [1,2,4,6,7,8]
+      const check = requierementsList.some(
+        object => object === data.id
+      )
+      if(check){
+        return 'star'
+      }else{
+        return ''
+      }
+    },
     goSelectedStep(data){
       console.log(data)
     }

@@ -17,49 +17,42 @@
       </q-card-section>
       <q-separator size="1.5px"></q-separator>
       <q-card-section>
-<!--         <q-input
-          outlined
-          readonly
-          v-for="(data,key) in this.mySocialMediaLinks" :key="key"
-          :label="data.linkName"
-          class="q-mt-xs"
-          v-on:click="openLink(data)"
+        <q-scroll-area
+          :style="{
+              'height':this.store.mobileActive ? ''  : (this.$q.screen.height)/1.64 + 'px',
+              'width':this.store.mobileActive ? '100%' : '100%'
+            }"
         >
-          <template v-slot:prepend>
-            <q-icon :name="data.linkIcon"></q-icon>
-          </template>
-        </q-input> -->
         <q-card
-          style="border-radius:15px;"
-          class="q-mt-xs text-grey-7"
+          bordered
+          style="border-radius:4px;"
+          class="q-mt-xs text-grey-8"
           v-for="(data,key) in this.mySocialMediaLinks" :key="key"
         >
-          <q-card-section horizontal>
-            <q-item-section avatar class="col-1">
+          <q-item>
+            <q-item-section avatar class="">
               <q-avatar :icon="data.linkIcon" size="xl"></q-avatar>
             </q-item-section>
-            <q-item-section class="col text-left text-capitalize">
- <!--              <div class="text-subtitle2 text-weight-bold text-grey-6 text-capitalize">
-                {{ data.linkName ?? '' }}
-              </div> -->
+            <q-item-section class="text-left text-capitalize">
               <q-btn
                 icon-right="open_in_new"
                 :label="data.linkName ?? ''" flat v-on:click="openLink(data)" no-caps></q-btn>
             </q-item-section>
-            <q-item-section class="col-3" vertical>
+            <q-item-section class="" vertical>
               <q-btn
                 v-on:Click="editLink(data)"
-                class="q-pa-sm q-mt-sm"
+                class="q-pa-xs"
                 icon="update" flat color="grey-8"
               ></q-btn>
               <q-btn
-                class="q-pa-sm"
+                class="q-pa-xs"
                 v-on:click="deleteLink(data)"
-                icon="remove" flat color="red-4"  
+                icon="remove" flat color="red-4"
               ></q-btn>
             </q-item-section>
-          </q-card-section>
+          </q-item>
         </q-card>
+      </q-scroll-area>
       </q-card-section>
       <q-separator size="1.5px"></q-separator>
       <q-card-section>

@@ -3,16 +3,18 @@
   class="q-pa-sm"
   :style="{
     'width':this.store.mobileActive ? '100%' : '600px',
-    'margin':this.store.mobileActive ? '0 auto' : '0% auto'
+    'margin':this.store.mobileActive ? '0 auto' : '0% auto',
+    'height':this.$q.screen.height + 'px'
   }"
   >
-    <q-card-section v-if="this.mySkills.length">
-      <q-input
-        v-model="this.searchSkill.skillName"
-        filled
-        color="grey-8"
-        label="Search"
-        v-on:keyup="seachSkillFunc"
+    <q-input
+      v-if="this.mySkills.length"
+      v-model="this.searchSkill.skillName"
+      filled
+      color="grey-8"
+      class="q-mt-sm"
+      label="Search"
+      v-on:keyup="seachSkillFunc"
       >
         <template v-slot:prepend>
           <q-icon name="search"></q-icon>
@@ -21,7 +23,6 @@
           <q-btn icon="remove" flat color="red-4" v-if="this.searchSkill.skillName" v-on:click="delete this.searchSkill.skillName"></q-btn>
         </template>
       </q-input>
-    </q-card-section>
     <q-card-section class="row">
     <transition-group appear enter-active-class="animated fadeInLeft slower" leave-active-class="animated fadeOutRight slower">
       <q-card
@@ -32,16 +33,20 @@
         :class="this.checkMouseOnData(data)"
         v-touch-hold:2000.mouse="event => removeSelected(data)"
         v-for="(data,key) in this.mySkills" :key="key"
-        style="border-radius:15px;"
-        class="col-12 col-md-3 col-sm-3 q-ma-xs">
-        <q-card-section class="text-center text-capitalize">
-          <div>
-            {{ data.skillName ?? 'No Skill Name' }}
-          </div>
-          <div v-if="this.checkForDeleteList(data)">
-            <q-icon name="check" color="red-4"></q-icon>
-          </div>
-        </q-card-section>
+        style="border-radius:4px;"
+        class="col-12 col-md-3 col-sm-3 q-mt-xs">
+          <q-item>
+            <q-item-section class="text-center text-capitalize">
+              <div>
+                {{ data.skillName ?? 'No Skill Name' }}
+              </div>
+            </q-item-section>
+            <q-item-section class="text-right">
+              <div v-if="this.checkForDeleteList(data)">
+                <q-icon name="check" color="red-4"></q-icon>
+              </div>
+            </q-item-section>
+          </q-item>
       </q-card>
     </transition-group>
     </q-card-section>
@@ -49,40 +54,47 @@
       @dragover.prevent
       @dragleave.prevent
       @drop="onDrop(e)"
-      class="bg-red-2" style="border-radius:7px;">
+      class="bg-red-4" style="border-radius:7px;">
       <q-card
-        flat
         v-for="(data,key) in this.deleteList" :key="key"
-        class="bg-transparent text-grey-8 text-weight-bold"
-        style="border-radius:7px;"
+        class="bg-grey-2 text-grey-8 text-weight-bold q-mt-xs"
+        style="border-radius:4px;"
       >
-        <q-card-section horizontal class="q-pa-md text-capitalize">
-          <div class="text-center">
+        <q-item>
+          <q-item-section class="q-pa-md text-capitalize text-left">
+          <div class="">
             <q-icon name="info"></q-icon>
             {{ data.skillName ?? '' }}
           </div>
-          <q-space></q-space>
+          <div class="text-caption text-weight-bold text-grey-6">
+            {{ data.skillAddedDate ?? '' }}
+          </div>
+        </q-item-section>
+        <q-item-section class="text-right">
           <div>
             <q-btn
               v-on:click="removeFromList(data)"
-              icon="remove" flat color="red-4"></q-btn>
+              icon="delete_forever" flat color="red-4"></q-btn>
           </div>
-        </q-card-section>
+        </q-item-section>
+        </q-item>
       </q-card>
 
       <q-btn
         v-on:click="deleteListClear"
         :disable="this.deleteList.length ? false : true"
-        icon="delete_forever" class="full-width q-mt-md" flat color="grey-7" no-caps label="Drop for Delete"></q-btn>
+        icon="delete_forever" class="full-width q-mt-md q-pa-md" flat
+        color="white" no-caps label="Drop for Delete"></q-btn>
 
     </q-card-section>
-    <q-card-section>
-      <q-input
+    <q-input
+      class="q-mt-md"
+        filled
         v-on:keyup.enter="this.addSkill()"
         color="grey-8"
-        v-model="this.skillData.skillName" label="Skill" filled>
+        v-model="this.skillData.skillName" label="Skill">
           <template v-slot:prepend>
-            <q-icon name="info"></q-icon>
+            <q-icon name="search"></q-icon>
           </template>
           <template v-slot:append>
             <q-btn icon="remove" flat color="red-4" v-if="this.skillData.skillName" v-on:click="delete this.skillData.skillName"></q-btn>
@@ -93,8 +105,7 @@
               icon="upload" color="blue-4" v-if="this.skillData.skillName" v-on:click="addSkill"></q-btn>
           </template>
         </q-input>
-    </q-card-section>
-    <q-card-section horizontal class="q-pa-md">
+    <q-card-section horizontal class="q-pa-md absolute-bottom">
       <q-btn
         v-on:click="this.store.currentStep = this.store.currentStep - 1"
         class="col" flat color="grey-8" label="Back" no-caps

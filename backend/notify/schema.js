@@ -23,7 +23,8 @@ const MyNotifiesSchema = new mongoose.Schema({
         type:welcomeMessageObject,
         required:false
     },   
-    myFriendsId:[]
+    myFriendsId:[],
+    myOldJobAdvertises:[]
 }) 
 
 const MyNotifies = mongoose.model('MyNotifies',MyNotifiesSchema)

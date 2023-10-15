@@ -66,17 +66,6 @@ export default {
       this.randomImageUrl = imageUrl
     },
     async getRandomImages(){
-      /*       fetch("https://api.pexels.com/v1/search?query=people",{
-        headers: {
-          Authorization: this.store.pexelsApiKey
-        }
-      })
-        .then(resp => {
-          return resp.json()
-        })
-        .then(data => {
-          console.log(data)
-        }) */
       const res = await fetch(`https://api.pexels.com/v1/search?query=new york`,{
         headers:{
           Authorization:this.store.pexelsApiKey

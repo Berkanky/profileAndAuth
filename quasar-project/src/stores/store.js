@@ -43,6 +43,28 @@ export const useCounterStore = defineStore('counter', {
   getters: {
   },
   actions: {
+    getAllActiveAdvertises(){
+      ///:firebaseId/getAllAdvertises
+      axios.get(`${this.baseUrl}/app/${this.firebaseData.uid}/getAllAdvertises`)
+        .then(res => {
+          console.log('getAllAdvertises',res)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    getAllOldAdvertises(){
+      const fid = this.firebaseData.uid
+      const url = this.baseUrl
+      ///:firebaseId/getMyJobAdvertises
+      axios.get(`${url}/app/${fid}/getMyJobAdvertises`)
+        .then( res => {
+          console.log(res)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
     getMyAdvertise(){
       const fid = this.firebaseData.uid
       const url = this.baseUrl
@@ -51,6 +73,7 @@ export const useCounterStore = defineStore('counter', {
         .then(res => {
           console.log(res)
           this.advertiseDetail = res.data.findadvertise
+          console.log('advertiseDetail',this.advertiseDetail)
         })
         .catch(err => {
           console.log(err)

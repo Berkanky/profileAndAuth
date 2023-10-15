@@ -77,6 +77,7 @@
         v-on:click="this.store.currentStep = this.store.currentStep - 1"
         icon="arrow_left" flat color="grey-8"></q-btn>
       <q-btn
+        v-on:Click="this.store.currentStep = this.store.currentStep + 1"
         flat color="grey-8" no-caps label="Next" icon-right="arrow_right" class="col q-mt-sm"></q-btn>
     </q-card-section>
   </q-card>
@@ -146,13 +147,16 @@ export default {
       }
     },
     checkLatLng(){
-      const locationData = this.store.myData.locationAdressDetail
-      const check = ['lat','lng'].every((key) => key in locationData)
+      const check = this.store.myData.hasOwnProperty('locationAdressDetail')
       if(check){
-        const secCheck = locationData.lat !== '' && locationData.lat !== null && locationData.lng !== '' && locationData.lng !== null ? true : false
-        return secCheck
-      }else{
-        return false
+        const locationData = this.store.myData.locationAdressDetail
+        const check = ['lat','lng'].every((key) => key in locationData)
+        if(check){
+          const secCheck = locationData.lat !== '' && locationData.lat !== null && locationData.lng !== '' && locationData.lng !== null ? true : false
+          return secCheck
+        }else{
+          return false
+        }
       }
     },
     removeMyLocation(){

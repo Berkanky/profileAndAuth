@@ -16,7 +16,6 @@
       </q-card-section>
       <q-card-section class="col">
         <q-file
-          rounded
           class=""
           standout="bg-dark text-white"
           v-model="this.selectFile"
@@ -26,17 +25,14 @@
           color="grey-8"
         >
           <template v-slot:prepend>
-            <q-icon name="collections_bookmark"></q-icon>
+            <q-icon name="collections_bookmark" size="sm"></q-icon>
           </template>
         </q-file>
         <q-btn
+
           v-on:click="this.store.cameraDialogActive =! this.store.cameraDialogActive"
-          rounded no-caps label="Camera"
-          icon="camera" color="purple-4" class="full-width q-mt-md"></q-btn>
-          <div class="text-overline text-weight-bold text-grey-6 q-pa-sm text-right" >
-            <q-icon name="event" size="sm"></q-icon>
-            {{ this.store.myData.lastProfileUpdatedDate ?? 'No Update' }}
-          </div>
+          no-caps label="Camera"
+          icon="camera" color="teal" class="full-width q-mt-md"></q-btn>
       </q-card-section>
     </q-card-section>
    <q-separator size="1.5px"></q-separator>

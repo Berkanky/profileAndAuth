@@ -21,11 +21,11 @@
       <q-card
         bordered
         v-for="(data,key) in this.myEducations" :key="key"
-        style="border-radius:15px;;"
+        style="border-radius:4px;;"
         class="q-mt-xs text-capitalize"
       >
-        <q-card-section horizontal>
-          <q-card-section class="col">
+        <q-item>
+          <q-item-section class="col">
             <div class="text-caption text-grey-5">
               {{ data.educationDegreeType }}
               <q-btn icon="fiber_manual_record" flat size="sm" :color="data.educationStatus === true ? 'green-4' : 'grey'"></q-btn>
@@ -39,24 +39,22 @@
             <div class="text-caption text-grey-5 text-weight-bold">
               {{ data.educationStartDate ?? '' }} - {{ data.educationFinishDate ?? '' }}
             </div>
-          </q-card-section>
-          <q-card-actions class="col-2 text-right justify-around" vertical>
+          </q-item-section>
+          <q-item-section class="col-2 text-right justify-around" vertical>
             <q-btn icon="edit" flat color="grey-8" v-on:click="editEducationBtn(data)"></q-btn>
             <q-btn icon="delete_forever" flat color="red-4" v-on:click="deleteForever(data)"></q-btn>
-          </q-card-actions>
-        </q-card-section>
+          </q-item-section>
+        </q-item>
       </q-card>
     </q-scroll-area>
     </q-card-section>
-    <q-card-section>
-      <q-btn
+    <q-btn
         v-on:click="addEducation"
         icon="add" flat color="green-4" no-caps label="Add Education" class="full-width"></q-btn>
       <q-btn
         v-on:click="saveAndSkip"
         icon="" label="Save&Skip" no-caps color="green-4" class="full-width q-mt-md"
       ></q-btn>
-    </q-card-section>
     <q-card-section horizontal class="q-pa-md">
       <q-btn
         v-on:click="this.store.currentStep = this.store.currentStep - 1"

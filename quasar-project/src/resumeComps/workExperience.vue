@@ -6,23 +6,32 @@
         'margin':this.store.mobileActive ? '0 auto' : '0% auto'
       }"
   >
-      <q-card-section>
         <q-input
+          class="q-mt-md"
           type="number"
           filled
           label="Work Experience"
           color="grey-8"
           v-model="this.workExperienceVal"
         ></q-input>
-      </q-card-section>
       <q-card-section>
+        <q-scroll-area
+          :style="{
+            'height':this.store.mobileActive ? ''  : (this.$q.screen.height)/1.64 + 'px',
+            'width':this.store.mobileActive ? '100%' : '100%'
+          }"
+        >
           <q-card
-            style="border-radius:15px;"
+            bordered
+            style="border-radius:4px;"
             class="q-mt-xs text-capitalize"
             v-for="(data,key) in this.workExperiences" :key="key"
           >
-            <q-card-section horizontal>
-              <q-card-section class="col">
+            <q-item>
+              <q-item-section avatar>
+                <q-icon name="info" color="grey-8"></q-icon>
+              </q-item-section>
+              <q-item-section class="">
                 <div class="text-subtitle2 text-weight-bold text-grey-8">
                   {{ data.workCompanyName ?? '' }}
                   <q-btn icon="fiber_manual_record" flat :color="data.workStatus ? 'green-4' : 'red-4'" size="sm">
@@ -31,10 +40,10 @@
                     </q-tooltip>
                   </q-btn>
                 </div>
-                <div class="text-overline text-grey-7">
+                <div class="text-caption text-grey-6 text-weight-bold">
                   {{ data.workPosition ?? '' }}
                 </div>
-                <div class="text-caption" >
+                <div class="text-caption text-grey-6 text-weight-bold" >
                   <span>
                     {{ data.workStartDate ?? '' }}
                   </span>
@@ -42,22 +51,20 @@
                     {{ data.workStatus === false ? data.workFinishDate : ''}}
                   </span>
                 </div>
-              </q-card-section>
-              <q-card-actions class="col-2 text-right" vertical>
+              </q-item-section>
+              <q-item-section class="text-right col-2" vertical>
                 <q-btn icon="edit" flat color="grey-8" v-on:click="editWork(data)"></q-btn>
                 <q-btn icon="delete_forever" flat color="red-4" v-on:click="removeWorkExperience(data)"></q-btn>
-              </q-card-actions>
-            </q-card-section>
+              </q-item-section>
+            </q-item>
           </q-card>
+        </q-scroll-area>
       </q-card-section>
-
-      <q-card-section>
-        <q-btn
+      <q-btn
           no-caps
           v-on:click="this.store.addWorkExperienceCardActive =! this.store.addWorkExperienceCardActive"
           icon="add" flat color="green-4" label="Add Work Experience" class="full-width"></q-btn>
         <q-btn icon="" no-caps label="Save&Skip" color="green-4" class="full-width q-mt-md" v-on:click="saveExperience"></q-btn>
-      </q-card-section>
       <q-card-section horizontal class="q-pa-md">
         <q-btn
           v-on:click="this.store.currentStep = this.store.currentStep - 1"
@@ -90,13 +97,10 @@ export default {
 
     checkMyDataWorkExperience(){
       const check = this.store.myData.hasOwnProperty('totalWorkExperience')
-      do{
-        this.workExperienceVal = 0
-      }
-      while(!check)
-
       if(check){
         this.workExperienceVal = this.store.myData.totalWorkExperience
+      }else{
+        this.workExperienceVal = 0
       }
 
     },
@@ -149,8 +153,8 @@ export default {
         })
     },
     getMyExperiences(){
-      const check = '_id' in this.store.myData
-      if(check){
+      const check = this.store.myData.hasOwnProperty('_id')
+      if(check === true){
         const secCheck = this.store.myData.hasOwnProperty('works')
         if(secCheck){
           this.workExperiences = this.store.myData.works

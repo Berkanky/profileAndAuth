@@ -2,7 +2,10 @@
   <q-layout view="lHh LpR fFf">
     <q-header elevated class="bg-grey-9 text-white">
       <q-toolbar>
-        <q-btn v-if="this.$route.path !== '/login'" dense flat round icon="menu" @click="toggleLeftDrawer" />
+        <q-btn
+          v-if="this.$route.path !== '/login'" dense flat round
+          :icon="leftDrawerOpen  === true ? 'menu' : 'menu_open'"
+          @click="toggleLeftDrawer" />
 
         <q-toolbar-title>
 
@@ -16,11 +19,11 @@
         class="bg-grey-2"
         v-model="this.leftDrawerOpen"
         :width="300"
-        :show-if-above="this.checkUserInOrNot() ? true : false"
+        show-if-above
         :breakpoint="400"
       >
         <q-scroll-area style="height: calc(100% - 150px); margin-top: 150px; border-right: 1px solid #ddd">
-          <q-list>
+          <q-list class="">
             <q-item
               v-on:click="goSelected(data)"
               :class="this.checkCurrentPage(data)"
@@ -36,11 +39,17 @@
           </q-list>
         </q-scroll-area>
 
-        <q-img class="absolute-top" src="https://cdn.quasar.dev/img/material.png" style="height: 150px">
-          <div class="absolute-bottom bg-transparent">
-            <q-avatar size="56px" class="q-mb-sm">
+        <q-img
+          loading="lazy"
+          spinner-color="white"
+          v-on:click="this.randomLoginImage()"
+          class="absolute-top"
+          :src="this.randomImageUrl ?? 'https://cdn.quasar.dev/img/material.png'"
+          style="height: 150px;object-fit:cover;">
+          <div class="absolute-bottom">
+  <!--           <q-avatar size="65px" class="q-mb-sm">
               <userImage />
-            </q-avatar>
+            </q-avatar> -->
             <div class="text-weight-bold">{{ this.store.firebaseData.displayName ?? this.myData.displayName ?? 'No Name' }}</div>
             <div>@{{ this.myData.email ?? this.store.firebaseData.email ?? 'No Email' }}</div>
           </div>
@@ -86,15 +95,53 @@ export default {
       options:[
         {id:1,label:'Home',icon:'home',name:'home'},
         {id:2,label:'Profile',icon:'person',name:'profile'},
-        {id:3,label:'My Resume',icon:'info',name:'resume'}
+        {id:3,label:'My Resume',icon:'info',name:'resume'},
+        {id:4,label:'Check Jobs',icon:'work',name:'advertises'}
       ],
-      myData:{}
+      myData:{},
+      randomImageUrl:'',
+      randomImageList:[]
+    }
+  },
+  mounted(){
+    const check = this.store.mobileActive === false ? true : false
+    if(check){
+      this.leftDrawerOpen = true
     }
   },
   created(){
+    this.getRandomImages()
     console.log(this.$route)
   },
   methods:{
+    randomLoginImage(){
+      const randomNumber = Math.floor(Math.random() * 15);
+      const randomImage = this.randomImageList[randomNumber]
+
+      const imageUrl = randomImage.src.original
+      console.log(imageUrl)
+      this.randomImageUrl = imageUrl
+    },
+    async getRandomImages(){
+      const res = await fetch(`https://api.pexels.com/v1/search?query=new york`,{
+        headers:{
+          Authorization:this.store.pexelsApiKey
+        }
+      })
+
+      const resData  = await res.json()
+      this.randomImageList = resData.photos
+      this.randomImageList.forEach(element => {
+        const check = 'url' in element
+        if(!check){
+          this.randomImageList = this.randomImageList.filter(
+            object => object.id !== element.id
+          )
+        }
+      });
+      this.randomLoginImage()
+      console.log(this.randomImageList)
+    },
     watchMyData(){
       this.$watch('store.myData',(newVal) => {
         if(newVal){
@@ -129,6 +176,12 @@ export default {
             params:{
               id:id
             }
+          }
+        )
+      }else if(data.id === 4){
+        this.$router.push(
+          {
+            path:'/advertises'
           }
         )
       }

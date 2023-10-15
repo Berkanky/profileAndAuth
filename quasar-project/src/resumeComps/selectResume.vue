@@ -13,27 +13,30 @@
       </div>
       <div class="text-weight-bold text-grey-6">
         Thanks to our artificial intelligence-supported robot, we fill out the profiles automatically. Upload your current CV in the appropriate format and apply to free events and postings!
-      </div>
+      </div>  
     </q-card-section>
     <q-card-section v-if="this.checkMyCvInDb() === true">
-      <q-card>
-        <q-card-section horizontal class="">
-          <q-card-section class="col-2">
-            <q-btn icon="folder" color="grey-6" flat></q-btn>
-          </q-card-section>
-          <q-card-section class="col" >
-            <div class=" text-subtitle2">
+      <q-card
+        style="border-radius:4px;"
+      >
+        <q-item class="">
+
+          <q-item-section avatar>
+            <q-icon name="folder" color="grey-8" flat  class="col-2"></q-icon>
+          </q-item-section>
+          <q-item-section class="col" >
+            <div class=" text-overline text-grey-8 text-weight-bold">
               {{ this.store.myData.selectedCvFile.selectedCvFileName ?? 'No Cv Selected !' }}
             </div>
             <div class="text-caption text-blue-5 text-weight-bold">
               {{ this.store.myData.selectedCvFile.selectedCvFileUrl ? (this.store.myData.selectedCvFile.selectedCvFileUrl).slice(0,30)  :  'No CV URL' }}
             </div>
-          </q-card-section>
-          <q-card-section class="col-2">
+          </q-item-section>
+          <q-item-section class="col-2">
             <q-btn icon="delete_forever" v-on:click="removeCv" flat color="red-4"></q-btn>
-            <q-btn icon="download" flat color="grey-8" v-on:click="downloadFile"></q-btn>
-          </q-card-section>
-        </q-card-section>
+            <q-btn icon="download" flat color="green-4" v-on:click="downloadFile"></q-btn>
+          </q-item-section>
+        </q-item>
       </q-card>
     </q-card-section>
     <q-card-section>
@@ -45,7 +48,7 @@
         filled
         counter
         @update:model-value="selectFileFunction"
-        color="blue-4"
+        color="grey-8"
       >
         <template v-slot:prepend>
           <q-icon name="folder"></q-icon>
@@ -63,6 +66,7 @@
         color="grey-6" class="full-width" no-caps label="Upload" v-on:click="uploadResume"></q-btn>
     </q-card-section>
     <q-card-section
+      class="absolute-bottom"
     >
       <q-btn
         class="full-width"

@@ -1,11 +1,7 @@
 <template>
   <q-card>
     <q-card-section>
-      <q-input
-        color="grey-8"
-        filled
-        label="Enter "
-      ></q-input>
+
     </q-card-section>
   </q-card>
 </template>
@@ -25,10 +21,15 @@ export default {
     }
   },
   methods:{
-
+    getMyAllOldAdvertises(){
+      const check = this.store.firebaseData.hasOwnProperty('uid')
+      if(check){
+        this.store.getAllOldAdvertises()
+      }
+    }
   },
   created(){
-
+    this.getMyAllOldAdvertises()
   },
   watch:{
 

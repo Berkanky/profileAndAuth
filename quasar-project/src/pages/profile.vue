@@ -25,10 +25,10 @@
           </q-list>
       </div>
       <div class="col">
-        <profileDetailComp v-if="this.selectedOption.id === 2"/>
+       <!--  <profileDetailComp v-if="this.selectedOption.id === 2"/> -->
         <myFriends v-if="this.selectedOption.id === 3"/>
         <accountManage v-if="this.selectedOption.id === 4"/>
-        <giveJobAdvertise v-if="this.selectedOption.id === 5"/>
+        <myJobAdvertises v-if="this.selectedOption.id === 5"/>
       </div>
       <div class="col-2 q-ml-md">
         <q-card>
@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import giveJobAdvertise from "src/components/giveJobAdvertise.vue";
+import myJobAdvertises from "src/components/myJobAdvertises.vue";
 import accountManage from "src/components/accountManage.vue";
 import myFriends from "src/components/myFriends.vue";
 import { getAuth, signOut } from "firebase/auth";
@@ -52,7 +52,7 @@ import profileDetailComp from 'src/components/profileDetailComp.vue';
 import { useCounterStore } from 'src/stores/store';
 export default {
   components:{
-    giveJobAdvertise,
+    myJobAdvertises,
     profileDetailComp,
     myFriends,
     accountManage
@@ -73,7 +73,7 @@ export default {
         {id:5,label:'Give Job Advertise',icon:'work'}
       ],
       selectedOption:{
-        id:2,
+        id:3,
       }
     }
   },

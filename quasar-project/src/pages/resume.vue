@@ -11,11 +11,12 @@
 </style>
 
 <template>
-  <q-page class="resumePage row">
+  <q-page class="resumePage row bg-grey-1">
     <stepperCompVue/>
     <div
       class="col"
     >
+    <transition-group appear enter-active-class="animated fadeInLeft slower" leave-active-class="animated fadeOutRight">
       <selectResumeVue v-if="this.store.currentStep === 1"/>
       <personalInformationVue v-if="this.store.currentStep === 2"/>
       <educationVue v-if="this.store.currentStep === 3 && !this.store.addNewEducationCardActive"/>
@@ -28,6 +29,7 @@
       <searchingPositions v-if="this.store.currentStep === 8"/>
       <userImages v-if="this.store.currentStep === 9"/>
       <endResume v-if="this.store.currentStep === 10"/>
+    </transition-group>
     </div>
   </q-page>
 </template>
