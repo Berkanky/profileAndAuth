@@ -59,12 +59,36 @@ export default {
     return{
       options:[
         {id:2,label:'Disable',icon:'update',color:'grey-8'},
-        {id:3,label:'Detail',icon:'login',color:'grey-8'}
+        {id:3,label:'Detail',icon:'login',color:'grey-8'},
+        {id:4,label:'RePost',icon:'restart_alt',color:'blue-4'}
       ],
       advertiseDetail:{}
     }
   },
   methods:{
+    repostNotify(){
+      this.$q.notify({
+        type:'positive',
+        icon:'info',
+        message:'RePost Successfull',
+        position:'bottom'
+      })
+    },
+    rePostAdvertise(){
+      ///:firebaseId/:selectedAdvertiseId/repostAdvertise
+      const fid = this.store.firebaseData.uid
+      const sid = this.store.advertiseDetail._id
+      const url = this.store.baseUrl
+      axios.put(`${url}/app/${fid}/${sid}/repostAdvertise`)
+        .then(res => {
+          console.log(res)
+          Object.assign(this.store.advertiseDetail,res.data.findadvertise)
+          this.repostNotify()
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
     checkgalleryactive(){
       const check = this.advertiseDetail.hasOwnProperty('hideGalleryActive')
       if(check){
@@ -147,6 +171,8 @@ export default {
         this.updateDisableAdvertise()
       }else if(data.id === 3){
         this.getDetailSelectedAdvertise()
+      }else if(data.id === 4){
+        this.rePostAdvertise()
       }
     },
     checkWatch(){
@@ -184,7 +210,7 @@ export default {
       const check = newVal.hasOwnProperty('uid')
       if(check){
         this.store.getMyAdvertise()
-        this.store.getAllActiveAdvertises() 
+        this.store.getAllActiveAdvertises()
       }
     },{
       immediate:true, deep:true

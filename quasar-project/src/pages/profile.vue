@@ -28,7 +28,9 @@
        <!--  <profileDetailComp v-if="this.selectedOption.id === 2"/> -->
         <myFriends v-if="this.selectedOption.id === 3"/>
         <accountManage v-if="this.selectedOption.id === 4"/>
-        <myJobAdvertises v-if="this.selectedOption.id === 5"/>
+        <myJobAdvertises
+          @goBackSelectedOption="getgoBackSelectedOption"
+          v-if="this.selectedOption.id === 5"/>
       </div>
       <div class="col-2 q-ml-md">
         <q-card>
@@ -70,7 +72,7 @@ export default {
         {id:2,label:'Settings',icon:'settings'},
         {id:3,label:'Friends',icon:'groups'},
         {id:4,label:'Account Settings',icon:'settings'},
-        {id:5,label:'Give Job Advertise',icon:'work'}
+        {id:5,label:'My Old Job Advertises',icon:'work'}
       ],
       selectedOption:{
         id:3,
@@ -78,6 +80,23 @@ export default {
     }
   },
   methods:{
+    getgoBackSelectedOption(data){
+      if(data && data === true){
+        const check = this.selectedOption.hasOwnProperty('id')
+        if(check === true){
+          const checkForMinVal = this.selectedOption.id > 0 ? true : false
+          if(checkForMinVal === true){
+            const newIdVal = this.selectedOption.id - 1
+            const result = this.leftColOptions.find(
+              object => Number(object.id) === Number(newIdVal)
+            )
+            if(result){
+              this.selectedOption = result
+            }
+          }
+        }
+      }
+    },
     logoutButton(){
       const auth = getAuth();
       signOut(auth).then(() => {

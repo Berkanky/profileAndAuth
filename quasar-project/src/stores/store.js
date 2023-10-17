@@ -38,11 +38,25 @@ export const useCounterStore = defineStore('counter', {
     selectedImage:{
       imageUrl:'',
     },
-    advertiseDetail:{}
+    advertiseDetail:{},
+    myJobAdvertises:[]
   }),
   getters: {
   },
   actions: {
+    updateGlobalAdvertiseFunc(allBody){
+      ///:firebaseId/updateGlobal
+      const url = this.baseUrl
+      const fid = this.firebaseData.uid
+      axios.put(`${url}/app/${fid}/updateGlobal`, allBody)
+        .then(res => {
+          console.log(res)
+          this.getMyAdvertise()
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
     getAllActiveAdvertises(){
       ///:firebaseId/getAllAdvertises
       axios.get(`${this.baseUrl}/app/${this.firebaseData.uid}/getAllAdvertises`)
@@ -60,6 +74,7 @@ export const useCounterStore = defineStore('counter', {
       axios.get(`${url}/app/${fid}/getMyJobAdvertises`)
         .then( res => {
           console.log(res)
+          this.myJobAdvertises = res.data.myJobAdvertises
         })
         .catch(err => {
           console.log(err)
@@ -101,6 +116,7 @@ export const useCounterStore = defineStore('counter', {
       Object.assign(allBody,{
         url,fid,uid
       })
+      console.log(allBody)
       return allBody
     },
     getMyFriendsList(id){

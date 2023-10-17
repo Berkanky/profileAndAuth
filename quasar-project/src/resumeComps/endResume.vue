@@ -31,7 +31,9 @@
       </q-btn>
     </q-card-section>
     <q-separator size="1.5px"></q-separator>
-    <q-input
+    <div class="row" style="height:144px;">
+      <q-input
+        class="col"
         label="Describe Your Mention"
         type="textarea" filled color="grey-8"
         v-model="this.userData.mentionAboutMe"
@@ -40,6 +42,16 @@
           <q-icon name="info"></q-icon>
         </template>
       </q-input>
+      <transition appear enter-active-class="animated fadeIn slower" leave-active-class="animated fadeOut slower">
+        <q-btn
+        class="col-1 full-height"
+        icon="update"
+        color="green-4"
+        v-if="this.mentionAboutMeNewDataActive"
+        v-on:click="updateMentionAboutMe"
+      ></q-btn>
+      </transition>
+    </div>
       <q-card-section class="q-mt-md q-pa-md">
         <q-list class="">
           <q-item tag="label" v-ripple>
@@ -125,9 +137,20 @@ export default {
   data:function(){
     return{
       userData:{},
+      mentionAboutMeNewDataActive:false
     }
   },
   methods:{
+    updateMentionAboutMe(){
+      const newData = {
+        mentionAboutMe:this.userData.mentionAboutMe
+      }
+      const allBody = {
+        newData:newData
+      }
+      this.store.updateGlobalAdvertiseFunc(allBody)
+      this.mentionAboutMeNewDataActive = false
+    },
     updategallerystatus(val){
       console.log(val)
       ///:firebaseId/updategalleryactive
@@ -258,9 +281,25 @@ export default {
     this.getStatusAdvertise()
   },
   watch:{
+    userData:{
+      handler(newVal,oldVal){
+        const check = newVal.hasOwnProperty('mentionAboutMe')
+        if(check === true){
+          const currentVal = this.store.advertiseDetail.mentionAboutMe ?? ''
+          if(currentVal !== newVal.mentionAboutMe){
+
+            this.mentionAboutMeNewDataActive = true
+          }else{
+            this.mentionAboutMeNewDataActive = false
+          }
+          console.log('mentionAboutMeNewDataActive',newVal.mentionAboutMe,this.mentionAboutMeNewDataActive)
+        }
+      },
+      immediate:true, deep:true
+    },
     'store.advertiseDetail':{
       handler(newVal){
-        const check = newVal.hasOwnProperty('_id')
+/*         const check = newVal.hasOwnProperty('_id')
         if(check){
           Object.assign(this.userData,{
             mentionAboutMe:newVal.mentionAboutMe,
@@ -269,6 +308,18 @@ export default {
             hideGalleryActive:newVal.hideGalleryActive ?? true
           })
           console.log('store.advertiseDetail',this.userData)
+        } */
+        if(newVal){
+          const check = newVal.hasOwnProperty('_id')
+          if(check){
+            Object.assign(this.userData,{
+              mentionAboutMe:newVal.mentionAboutMe,
+              hideLocationDetails:newVal.hideLocationDetails ?? false,
+              lookingForJob:newVal.lookingForJob ?? true,
+              hideGalleryActive:newVal.hideGalleryActive ?? true
+            })
+            console.log('store.advertiseDetail',this.userData)
+          }
         }
       },
       immediate:true,deep:true

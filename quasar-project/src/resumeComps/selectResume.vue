@@ -13,18 +13,19 @@
       </div>
       <div class="text-weight-bold text-grey-6">
         Thanks to our artificial intelligence-supported robot, we fill out the profiles automatically. Upload your current CV in the appropriate format and apply to free events and postings!
-      </div>  
+      </div>
     </q-card-section>
     <q-card-section v-if="this.checkMyCvInDb() === true">
       <q-card
+        class="bg-grey-1"
         style="border-radius:4px;"
       >
         <q-item class="">
-
-          <q-item-section avatar>
-            <q-icon name="folder" color="grey-8" flat  class="col-2"></q-icon>
+          <q-item-section avatar class="col-2">
+            <q-icon name="folder" color="grey-8" flat  ></q-icon>
           </q-item-section>
-          <q-item-section class="col" >
+          <q-separator vertical size="1.5px"></q-separator>
+          <q-item-section class="col text-center" >
             <div class=" text-overline text-grey-8 text-weight-bold">
               {{ this.store.myData.selectedCvFile.selectedCvFileName ?? 'No Cv Selected !' }}
             </div>
@@ -32,6 +33,7 @@
               {{ this.store.myData.selectedCvFile.selectedCvFileUrl ? (this.store.myData.selectedCvFile.selectedCvFileUrl).slice(0,30)  :  'No CV URL' }}
             </div>
           </q-item-section>
+          <q-separator vertical size="1.5px"></q-separator>
           <q-item-section class="col-2">
             <q-btn icon="delete_forever" v-on:click="removeCv" flat color="red-4"></q-btn>
             <q-btn icon="download" flat color="green-4" v-on:click="downloadFile"></q-btn>
@@ -60,11 +62,10 @@
           </template>
       </q-file>
     </q-card-section>
-    <q-card-section>
       <q-btn
+        icon="upload"
         :disable="this.checkResume() ? false : true"
         color="grey-6" class="full-width" no-caps label="Upload" v-on:click="uploadResume"></q-btn>
-    </q-card-section>
     <q-card-section
       class="absolute-bottom"
     >

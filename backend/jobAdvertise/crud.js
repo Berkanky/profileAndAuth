@@ -119,35 +119,21 @@ app.put('/:firebaseId/removeMyAdvertise',async(req,res) => {
     }
 })
 
-
 app.get('/:firebaseId/getMyJobAdvertises',async(req,res) => {
     const {firebaseId} = req.params
     try{
-        let allUsersList = await User.find()
         const findme = await User.findOne({fireBaseId : firebaseId})
-        if(findme && allUsersList.length > 0){
+        if(findme){
             const mynotifies = await MyNotifies.findOne({userId : findme._id})
             if(mynotifies){
-                
+                //hideLocationDetails, hideAdvertiseStatus, lookingForJob === true, hideGalleryActive === false
                 const check = 'myOldJobAdvertises' in mynotifies
                 if(check){
-                    let myJobAdvertises = []
-                    mynotifies.myOldJobAdvertises.forEach(element => {
-                        const newObj = {}
-                        Object.assign(newObj,element)
-                        const finduser = allUsersList.find(
-                            object => String(object._id) === String(element.jobAdvertiserId)
-                        )
-                        if(finduser){
-                            Object.assign(newObj,{
-                                jobAdvertiserDetails:finduser
-                            })
-                            myJobAdvertises.push(newObj)
-                        }
-                    });
-                    res.status(200).json({myJobAdvertises})
+                    let myJobAdvertises = mynotifies.myOldJobAdvertises
+                    res.status(200).json({
+                        myJobAdvertises
+                    })
                 }
-                
             }
         }
     }catch(err){
@@ -353,5 +339,120 @@ app.get('/:firebaseId/getAllAdvertises',async(req,res) => {
         res.status(500).json({message:'Interanl Servre err'})
     }
 })
+
+const currentTime = () => {
+    const newDate = new Date().toLocaleString()
+    return newDate
+}
+
+app.put('/:firebaseId/:selectedAdvertiseId/repostAdvertise',async(req,res) => {
+    const {firebaseId, selectedAdvertiseId} = req.params
+    try{
+        const filter = {_id : selectedAdvertiseId}
+        const update = {
+            jobAdvertiseDate: currentTime(),
+            hideLocationDetails:false,
+            hideAdvertiseStatus:false,
+            hideGalleryActive:true,
+            lookingForJob:true        
+        }
+        const findadvertise = await Advertise.findOneAndUpdate(filter,update)
+
+        const findadvertiseagain = await Advertise.findOne({_id : selectedAdvertiseId})
+        if(findadvertiseagain){
+            res.status(200).json({findadvertise : findadvertiseagain})
+        }
+        
+    }catch(err){
+        res.status(500).json({message:'Internal Server Err'})
+    }
+})
+
+
+app.put('/:firebaseId/updateGlobal',async(req,res) => {
+    const {firebaseId} = req.params
+    try{
+        const newData = req.body.newData
+        const filter = {jobAdvertiserFirebaseId : firebaseId}
+        const update = newData
+
+        const findadvertise = await Advertise.findOneAndUpdate(filter,update)
+        res.status(200).json(findadvertise)
+
+    }catch(err){
+        res.status(500).json({message:'Internal Server Err'})
+    }
+})
+
+
+
+app.put('/:currentUserId/:advertiseId/removeSelectedOldAdvertise',async(req,res) => {
+    const {currentUserId, advertiseId} = req.params
+    try{    
+        const mynotifies = await MyNotifies.findOneAndRemove(
+            { userId : currentUserId },
+            { $pull : {myOldJobAdvertises : {_id : advertiseId}}}
+        )
+
+        res.status(200).json({mynotifies})
+
+    }catch(err){
+        res.status(500).json({message:'Internal Server Err'})
+    }
+})
+
+app.put('/:currentUserId/uploadOldAdvertise',async(req,res) => {
+    const {currentUserId} = req.params
+    try{
+        const resBody = {}
+        const newData = req.body.newData
+        const findmynotifies = await MyNotifies.findOneAndRemove(
+            {userId : currentUserId},
+            {$pull : {myOldJobAdvertises : {_id : newData._id}}}
+        )
+        
+        Object.assign(newData,{
+            jobAdvertisePostEndDate:'',
+            jobAdvertiseDate:new Date().toLocaleString(),
+            declinedStatus:false,
+            confirmedStatus:false,
+            hideLocationDetails:false,
+            hideAdvertiseStatus:false,
+            lookingForJob:newData.lookingForJob ?? true,
+            hideGalleryActive:false,
+        })
+         
+        delete newData._id
+
+        const checkcurrentadvertise = await Advertise.findOne({jobAdvertiserId : currentUserId})
+        if(!checkcurrentadvertise){
+            const newPost = new Advertise(newData)
+            await newPost.save()
+            Object.assign(resBody,{
+                newPost
+            })
+        }else{
+            const filter = {jobAdvertiserId : currentUserId}
+            const update = newData
+            const updateCurrentAdvertise = await Advertise.findOneAndUpdate(filter,update)
+            if(updateCurrentAdvertise){
+                Object.assign(resBody,{
+                    updateCurrentAdvertise
+                })
+            }
+        }
+
+
+        Object.assign(resBody,{
+            findmynotifies,newData
+        })
+        res.status(200).json({resBody})
+
+    }catch(err){
+        res.status(500).json({message: 'Internal Server Error'})
+    }
+})
+
+
 
 module.exports = app

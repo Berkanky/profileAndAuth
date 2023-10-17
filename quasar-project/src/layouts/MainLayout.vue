@@ -59,7 +59,7 @@
     <q-page-container>
       <router-view />
     </q-page-container>
-    <q-footer elevated class="bg-grey-9 text-white">
+    <q-footer class="bg-grey-9 text-white">
       <q-toolbar>
         <q-toolbar-title>
         </q-toolbar-title>
